@@ -1,5 +1,5 @@
 
-# Time-stamp: "2000-05-14 00:42:13 MDT"
+# Time-stamp: "2004-12-29 19:01:48 AST"
 require 5;
 package Mac::FileSpec::Unixish;
 
@@ -11,7 +11,7 @@ require Exporter;
 @EXPORT = qw(nativize unixify);
 @EXPORT_OK = qw(nativize unixify under_macos);
 
-$VERSION = "1.11";
+$VERSION = "1.12";
 $Debug = 0;
 
 $Pretend_Non_Mac ||= 0;  # hardcode to 1 for testing non-Mac things on a Mac
