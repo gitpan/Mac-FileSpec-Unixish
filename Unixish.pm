@@ -1,5 +1,5 @@
-# Time-stamp: "1998-11-30 10:59:14 MST"
-#==========================================================================
+
+# Time-stamp: "2000-05-14 00:42:13 MDT"
 require 5;
 package Mac::FileSpec::Unixish;
 
@@ -11,7 +11,7 @@ require Exporter;
 @EXPORT = qw(nativize unixify);
 @EXPORT_OK = qw(nativize unixify under_macos);
 
-$VERSION = "1.1";
+$VERSION = "1.11";
 $Debug = 0;
 
 $Pretend_Non_Mac ||= 0;  # hardcode to 1 for testing non-Mac things on a Mac
@@ -56,7 +56,7 @@ Using this library, you can, in your code, refer to files using a
 Unixish notation, a la:
 
   $foo = "../analyses/ziz.txt";
-  open(OUT, '>' . &nativize($foo) ) || die "Couldn't open $foo \: $!";
+  open(OUT, '>' . nativize($foo) ) || die "Couldn't open $foo \: $!";
 
 Under Unix, C<nativize($foo)> will be simply "../analyses/ziz.txt"
 (C<nativize> and C<unixify> are nearly no-ops under Unixes); but under
@@ -66,9 +66,9 @@ Incidentally, C<nativize(unixify($item))> is always eq C<$item>, for
 all (defined, non-undef) values of C<$item>, regardless of whether or
 not this is performed under MacOS.  In other words, this:
 
-  @items = map(&unixify($_), @ARGV);
+  @items = map(unixify($_), @ARGV);
   foreach $one (@items) {
-    print "$one => ", -s &nativize($one), " bytes\n";
+    print "$one => ", -s nativize($one), " bytes\n";
     my $one_copy = $one;
     $one_copy =~ s/[^/]+$//s;
     print " in the directory $one_copy";
@@ -87,12 +87,12 @@ misunderstood as path separators in the Unixish representation -- see
 "GUTS", below, for the gory details.)
 
 This library also provides (but does not by default export) a function
-&Mac::FileSpec::Unixish::under_macos, which returns true if you're
+Mac::FileSpec::Unixish::under_macos(), which returns true if you're
 running under MacOS, and false otherwise.  You can use that in cases
 like:
 
   my $home =
-    &Mac::FileSpec::Unixish::under_macos ?  '/Sean/' : '~/' ;
+    Mac::FileSpec::Unixish::under_macos() ?  '/Sean/' : '~/' ;
 
 =head2 PURPOSE
 
@@ -114,7 +114,7 @@ Proper use of this library means that I<every> time you pass a file
 specification to any file operation (from C<chdir> to C<-s> to
 C<opendir>), you should pass the Unixish designation thru C<nativize>
 -- and I<every> time you get a file spec from the OS (thru C<@ARGV> or
-C<&StandardFile::GetFolder("Select a folder")> or whatever), that you
+C<StandardFile::GetFolder("Select a folder")> or whatever), that you
 pass it thru C<unixify> to get the Unixish representation.
 
 C<nativize> and C<unixify> are the only two functions this module
@@ -157,7 +157,7 @@ Example:
 
 But actual hardcoding of "\e2f" is unwise, since if you have:
 
-  open(OUT, '>' . &nativize("/Foovol/stuff/05\e2f98");
+  open(OUT, '>' . nativize("/Foovol/stuff/05\e2f98"));
 
 This will Do What You Want only if you're under MacOS, but under Unix
 it will instead try to write to C</Foovol/stuff/05/98>.
@@ -197,13 +197,16 @@ drop the Finder icon for the directory "foo:bar" (or any other
 non-volume-root directory I've tested this on) onto a droplet, it'll
 see "foo:bar" in @ARGV -- no trailer.
 
-=head1 COPYING
+=head1 COPYRIGHT
 
-You may use and redistribute under the same terms as Perl itself.
+Copyright 1998-2000, Sean M. Burke C<sburke@cpan.org>, all rights
+reserved.
+
+You may use and redistribute this library under the same terms as Perl itself.
 
 =head1 AUTHOR
 
-Sean M. Burke C<sburke@netadventure.net>
+Sean M. Burke C<sburke@cpan.org>
 
 =cut
 
